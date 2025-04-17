@@ -5,8 +5,15 @@ __pycache__/
 
 db.sqlite3
 
+#Archivos locales
 .venv/
-
 .env
+*env
 
+#Resultados de tests
 .coverage
+
+#Archivos generados por Terraform
+.terraform/
+.terraform*
+*.tfstate*

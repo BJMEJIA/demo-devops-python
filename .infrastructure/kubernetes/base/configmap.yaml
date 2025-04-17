@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devsu-python-app-cm
+data:
+  DATABASE_NAME: "db.sqlite3"
+

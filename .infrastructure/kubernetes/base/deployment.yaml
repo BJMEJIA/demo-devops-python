@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: devsu-python-app
+  name: devsu-python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devsu-python-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: devsu-python-app
+    spec:
+      containers:
+      - image: devsu-python-app:latest
+        name: devsu-python-app
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        resources: {}
+        envFrom:
+          - configMapRef:
+              name: devsu-python-app-cm
+          - secretRef:
+              name: devsu-python-app-secrets
+        livenessProbe:
+          httpGet:
+            path: /api
+            port: 8000
+            httpHeaders:
+              - name: host
+                value: localhost
+          initialDelaySeconds: 10   
+          periodSeconds: 5          
+          timeoutSeconds: 2         
+          failureThreshold: 3       
+        readinessProbe:
+          httpGet:
+            path: /api
+            port: 8000
+            httpHeaders:
+              - name: host
+                value: localhost
+          initialDelaySeconds: 5    
+          periodSeconds: 10         
+          timeoutSeconds: 2
+          failureThreshold: 3
+
+status: {}

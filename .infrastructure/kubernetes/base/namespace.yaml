@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: base_namespace
+  labels:
+    environment: base_namespace
