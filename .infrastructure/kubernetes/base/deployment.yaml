@@ -18,7 +18,7 @@ spec:
         app: devsu-python-app
     spec:
       containers:
-      - image: devsu-python-app:latest
+      - image: devsu-python-app-ecr:latest
         name: devsu-python-app
         imagePullPolicy: IfNotPresent
         ports:
