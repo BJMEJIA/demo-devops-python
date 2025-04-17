@@ -41,7 +41,6 @@ jobs:
     # Parar si el score se encuentra bajo determinado valor
     # Utilizare este metodo por conveniencia ya que el codigo presenta errores
     - name: Static Code Analysis (Pylint)
-      continue-on-error: true
       env: 
         MIN_SCORE: 4.5
       run: |
@@ -54,6 +53,7 @@ jobs:
           exit 1
         else 
           echo "The score meets the threshold"
+        fi
 
     # O parar si se encuentra cualquier error
     # - name: Static Code Analysis (Pylint)
@@ -62,6 +62,7 @@ jobs:
 
     - name: Upload static code analysis report
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: pylint-report
         path: pylint-report.json
@@ -88,17 +89,21 @@ jobs:
     #El test fallara si el coverage se encuentra bajo un valor determinado
     # Para esta demo se usara 80
     - name: Run Unit Tests and Collect Coverage
-      continue-on-error: true
       env: 
         MIN_SCORE: 80
+        DJANGO_SECRET_KEY: ${{ github.env.DJANGO_SECRET_KEY }}
+        DATABASE_NAME: ${{ github.env.DATABASE_NAME }}
       run: |
+
         coverage run manage.py test
+        
         coverage json # Se eligio JSON para esta demostración pero coverage ofrece otros formatos para imprimir el reporte.
 
         coverage report --fail-under=$MIN_SCORE
 
     - name: Upload code coverage analysis report
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: coverage-report
         path: coverage.json
@@ -113,7 +118,6 @@ jobs:
 
     - name: Run Trivy vulnerability scanner in repo mode
       uses: aquasecurity/trivy-action@0.30.0
-      continue-on-error: true
       with:
         scan-type: 'fs'
         ignore-unfixed: true
@@ -124,6 +128,7 @@ jobs:
 
     - name: Upload vulnerability analysis report
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: vulnerability-report
         path: trivy-results.txt
