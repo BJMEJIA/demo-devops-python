@@ -1,0 +1,129 @@
+name: Python Test Code
+
+on:
+  push:
+    branches: development
+  pull_request:
+    branches: development
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        default: development
+
+permissions:
+  contents: read
+
+env: 
+  PYTHON_VERSION: 3.11.3
+
+jobs:
+  static-code-analysis:
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.ref_name }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ github.env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pylint
+
+    # Pylint ofrece dos opciones para detener el workflow:
+    # Parar si el score se encuentra bajo determinado valor
+    # Utilizare este metodo por conveniencia ya que el codigo presenta errores
+    - name: Static Code Analysis (Pylint)
+      continue-on-error: true
+      env: 
+        MIN_SCORE: 4.5
+      run: |
+        pylint . --exit-zero --output-format json2 --output pylint-report.json 
+
+        score=$(cat pylint-report.json | jq '.statistics.score ')
+
+        if [[ $score < $MIN_SCORE ]]; then
+          echo "The score is below $MIN_SCORE. Please fix linting issues before merging. "
+          exit 1
+        else 
+          echo "The score meets the threshold"
+
+    # O parar si se encuentra cualquier error
+    # - name: Static Code Analysis (Pylint)
+    #   run: |
+    #     pylint . --output-format json2 --output pylint-report.json   
+
+    - name: Upload static code analysis report
+      uses: actions/upload-artifact@v4
+      with:
+        name: pylint-report
+        path: pylint-report.json
+
+  code-coverage-analysis:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.ref_name }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ github.env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install coverage
+
+    #El test fallara si el coverage se encuentra bajo un valor determinado
+    # Para esta demo se usara 80
+    - name: Run Unit Tests and Collect Coverage
+      continue-on-error: true
+      env: 
+        MIN_SCORE: 80
+      run: |
+        coverage run manage.py test
+        coverage json # Se eligio JSON para esta demostración pero coverage ofrece otros formatos para imprimir el reporte.
+
+        coverage report --fail-under=$MIN_SCORE
+
+    - name: Upload code coverage analysis report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage.json
+
+  vulnerability-scan:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || github.ref_name }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner in repo mode
+      uses: aquasecurity/trivy-action@0.30.0
+      continue-on-error: true
+      with:
+        scan-type: 'fs'
+        ignore-unfixed: true
+        format: 'table'
+        output: 'trivy-results.txt'
+        severity: 'CRITICAL'
+        exit-code: 1
+
+    - name: Upload vulnerability analysis report
+      uses: actions/upload-artifact@v4
+      with:
+        name: vulnerability-report
+        path: trivy-results.txt
