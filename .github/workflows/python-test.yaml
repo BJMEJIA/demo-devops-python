@@ -29,7 +29,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ github.env.PYTHON_VERSION }}
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install dependencies
       run: |
@@ -78,7 +78,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ github.env.PYTHON_VERSION }}
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install dependencies
       run: |
@@ -91,12 +91,12 @@ jobs:
     - name: Run Unit Tests and Collect Coverage
       env: 
         MIN_SCORE: 80
-        DJANGO_SECRET_KEY: ${{ github.env.DJANGO_SECRET_KEY }}
-        DATABASE_NAME: ${{ github.env.DATABASE_NAME }}
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        DATABASE_NAME: ${{ vars.DATABASE_NAME }}
       run: |
 
         coverage run manage.py test
-        
+
         coverage json # Se eligio JSON para esta demostración pero coverage ofrece otros formatos para imprimir el reporte.
 
         coverage report --fail-under=$MIN_SCORE
