@@ -4,14 +4,16 @@ resources:
 - ../../base
 namespace: development
 images:
+- name: devsu-python-app
+  newName: devsu-python-app
+  newTag: latest-v3
 - name: devsu-python-app-ecr
   newName: devsu-python-app-ecr
   newTag: latest-v2
 secretGenerator:
-  - name: devsu-python-app-secrets
-    behavior: replace
-    envs:
-      - secret.env
+- behavior: replace
+  envs:
+  - secret.env
+  name: devsu-python-app-secrets
 generatorOptions:
   disableNameSuffixHash: true
-

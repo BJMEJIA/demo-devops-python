@@ -19,6 +19,9 @@ A simple Python application built for the DevOps technical test, demonstrating b
 - **Infrastructure Deployment:**  
   The infrastructure is deployed on AWS using Terraform. The scripts build an EKS instance and an ECR repository. Community modules were used to create the VPC and EKS cluster, and a custom module was built for the ECR for simplicity. EKS Auto Mode is used for the same reason, and the infrastructure code is included in this repository. In larger projects, it is advisable to separate infrastructure code into its own repository.
 
+- **Ingress Configuration:**  
+  The ingress file currently uses `localhost` as the root path. To work in a production environment running on the cloud, you will need a DNS Zone (e.g. Amazon Route 53), and EKS should be configured to use an AWS Load Balancer.
+
 - **Replica Management & AutoScaling:**  
   The requirement for two replicas and auto-scaling is not included in this project. This is because sharing the database among all replicas requires persistent shared storage and additional logic to coordinate running the `migrate` command, which prevents multiple replicas from applying migrations simultaneously. This step is critical in production environments when scaling horizontally.
 
@@ -29,17 +32,21 @@ A simple Python application built for the DevOps technical test, demonstrating b
 
 ## Table of Contents
 
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [Infrastructure](#infrastructure)
-- [Diagrams and Visual Aids](#diagrams-and-visual-aids)
-- [Contribution Guidelines](#contribution-guidelines)
-- [License](#license) 
+- [DevOps Python Application](#devops-python-application)
+  - [Additional Deployment \& Testing Considerations](#additional-deployment--testing-considerations)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Usage](#usage)
+    - [Local Deployment with Docker Desktop or Minikube](#local-deployment-with-docker-desktop-or-minikube)
+  - [API Endpoints](#api-endpoints)
+    - [Create User](#create-user)
+    - [Get Users](#get-users)
+    - [Get User](#get-user)
+  - [**CI/CD Pipeline**](#cicd-pipeline)
+  - [Infrastructure](#infrastructure)
+    - [Diagrams and Visual Aids](#diagrams-and-visual-aids)
 
 ## Prerequisites
 
@@ -104,6 +111,11 @@ To deploy the application locally using Docker Desktop or Minikube, follow these
 
 2. Deploy via Kubernetes:
    
+   Run the following command to use the newly created image:
+   ```bash
+   kustomize edit set image ${REPOSITORY_NAME}=${REPOSITOY_NAME}:${IMAGE_TAG}
+   ```
+
    Use the Kubernetes overlay for the desired environment (development in the following example) to deploy the application:
    ```bash
    kubectl apply -k ./.infrastructure/kubernetes/overlays/development
