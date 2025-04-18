@@ -37,9 +37,12 @@ jobs:
         pip install -r requirements.txt
         pip install pylint
 
-    # Pylint ofrece dos opciones para detener el workflow:
-    # Parar si el score se encuentra bajo determinado valor
-    # Utilizare este metodo por conveniencia ya que el codigo presenta errores
+    # [ES] Pylint ofrece dos opciones para detener el workflow si se encuentran errores:
+    #      Parar si el score se encuentra bajo determinado valor
+    #      Utilizare este metodo por conveniencia ya que el codigo presenta errores
+    # [EN] Pylint offers two methods to stop the code if errors are found:
+    #      Stop if the score if less than a specific threshold
+    #      This method will be used because the code presents errors. 
     - name: Static Code Analysis (Pylint)
       env: 
         MIN_SCORE: 4.5
@@ -55,7 +58,8 @@ jobs:
           echo "The score meets the threshold"
         fi
 
-    # O parar si se encuentra cualquier error
+    # [ES] O parar si se encuentra cualquier error
+    # [EN] Or stop if any error is found
     # - name: Static Code Analysis (Pylint)
     #   run: |
     #     pylint . --output-format json2 --output pylint-report.json   
@@ -86,8 +90,8 @@ jobs:
         pip install -r requirements.txt
         pip install coverage
 
-    #El test fallara si el coverage se encuentra bajo un valor determinado
-    # Para esta demo se usara 80
+    # [ES] El test fallara si el coverage se encuentra bajo un valor determinado - para esta demo se usara 80
+    # [EN] The test will fail if the coverage percentage is bellow the threshold - 80% is used for this demo
     - name: Run Unit Tests and Collect Coverage
       env: 
         MIN_SCORE: 80
@@ -97,7 +101,9 @@ jobs:
 
         coverage run manage.py test
 
-        coverage json # Se eligio JSON para esta demostración pero coverage ofrece otros formatos para imprimir el reporte.
+        coverage json 
+        # [ES] Se eligio JSON para esta demostración pero coverage ofrece otros formatos para imprimir el reporte.
+        # [EN] JSON format was chosen for this demo. Other output formats can be considered.
 
         coverage report --fail-under=$MIN_SCORE
 
@@ -124,7 +130,9 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         severity: 'CRITICAL'
-        exit-code: 0 # Algunas librerias tienen CVEs criticos por lo que el workflow falla. 
+        exit-code: 0 
+        # [ES] Algunas librerias tienen CVEs criticos por lo que el workflow falla. 
+        # [EN] Some libraries show CRITICAL vulnerabilities so the workflow will fail.
 
     - name: Upload vulnerability analysis report
       uses: actions/upload-artifact@v4

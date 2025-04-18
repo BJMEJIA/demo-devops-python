@@ -29,7 +29,8 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    # Para que el tag sea unico, se puede utilizar una combinacion de timestamp y el git sha
+    # [ES] Para que el tag sea unico, se puede utilizar una combinacion de timestamp y el git sha
+    # [EN] A combination of timestamp and git sha is used to make the image tag unique
     - name: Set dynamic image tag (timestamp + short SHA)
       id: tag
       run: |
