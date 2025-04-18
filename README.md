@@ -23,7 +23,7 @@ A simple Python application built for the DevOps technical test, demonstrating b
   The ingress file currently uses `localhost` as the root path. To work in a production environment running on the cloud, you will need a DNS Zone (e.g. Amazon Route 53), and EKS should be configured to use an AWS Load Balancer.
 
 - **Replica Management & AutoScaling:**  
-  The requirement for two replicas and auto-scaling is not included in this project. This is because sharing the database among all replicas requires persistent shared storage and additional logic to coordinate running the `migrate` command, which prevents multiple replicas from applying migrations simultaneously. This step is critical in production environments when scaling horizontally.
+This project does not include a configuration for multiple replicas or auto-scaling. The design decision was made to ensure that all replicas share a single database rather than each having an independent instance, thereby providing a consistent user experience. Achieving this requires the use of persistent shared storage and additional coordination logic to manage database migrations effectively, avoiding potential conflicts from concurrent migration attempts. This approach is especially critical in production environments when horizontal scaling is implemented. 
 
 - **Database Migrations:**  
   The `makemigrations` command is not automated as part of the CI/CD pipeline. Database migrations should be managed manually with each code release and propagated carefully through all environments. In this demo, the `makemigrations` command does not have an effect and is not automatically executed.
