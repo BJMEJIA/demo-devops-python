@@ -104,8 +104,9 @@ A simple Python application built for the DevOps technical test, demonstrating b
 To deploy the application locally using Docker Desktop or Minikube, follow these steps:
 1. Build the Docker Image:
    ```bash
-   docker build . -t IMAGE-TAG
+   docker build . -t ${REPOSITOY_NAME}:${IMAGE-TAG}
    ```
+   Where `REPOSITORY_NAME` is `devsu-python-app-ecr`
 
    Replace IMAGE-TAG with your desired tag.
 
@@ -115,6 +116,7 @@ To deploy the application locally using Docker Desktop or Minikube, follow these
    ```bash
    kustomize edit set image ${REPOSITORY_NAME}=${REPOSITOY_NAME}:${IMAGE_TAG}
    ```
+   Where `REPOSITORY_NAME` is `devsu-python-app-ecr`
 
    Use the Kubernetes overlay for the desired environment (development in the following example) to deploy the application:
    ```bash
