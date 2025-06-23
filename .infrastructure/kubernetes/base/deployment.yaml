@@ -3,32 +3,32 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: devsu-python-app
-  name: devsu-python-app
+    app: demo-python-app
+  name: demo-python-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: devsu-python-app
+      app: demo-python-app
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: devsu-python-app
+        app: demo-python-app
     spec:
       containers:
-      - image: devsu-python-app-ecr:latest
-        name: devsu-python-app
+      - image: demo-python-app-ecr:latest
+        name: demo-python-app
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         resources: {}
         envFrom:
           - configMapRef:
-              name: devsu-python-app-cm
+              name: demo-python-app-cm
           - secretRef:
-              name: devsu-python-app-secrets
+              name: demo-python-app-secrets
         livenessProbe:
           httpGet:
             path: /api

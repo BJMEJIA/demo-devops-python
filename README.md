@@ -58,20 +58,13 @@ This project does not include a configuration for multiple replicas or auto-scal
 
 ## Installation
 
-1. **Clone the Repository:**
-
-   ```bash
-   git clone https://bitbucket.org/devsu/demo-devops-python.git
-   cd demo-devops-python
-   ```
-
-2. **Install Dependencies:**
+1. **Install Dependencies:**
 
    ```bash
     pip install -r requirements.txt
    ```
 
-3. **Apply Database Migrations:**
+2. **Apply Database Migrations:**
    ```bash
     py manage.py makemigrations
     py manage.py migrate
@@ -106,7 +99,7 @@ To deploy the application locally using Docker Desktop or Minikube, follow these
    ```bash
    docker build . -t ${REPOSITOY_NAME}:${IMAGE-TAG}
    ```
-   Where `REPOSITORY_NAME` is `devsu-python-app-ecr`
+   Where `REPOSITORY_NAME` is `demo-python-app-ecr`
 
    Replace IMAGE-TAG with your desired tag.
 
@@ -116,7 +109,7 @@ To deploy the application locally using Docker Desktop or Minikube, follow these
    ```bash
    kustomize edit set image ${REPOSITORY_NAME}=${REPOSITOY_NAME}:${IMAGE_TAG}
    ```
-   Where `REPOSITORY_NAME` is `devsu-python-app-ecr`
+   Where `REPOSITORY_NAME` is `demo-python-app-ecr`
 
    Use the Kubernetes overlay for the desired environment (development in the following example) to deploy the application:
    ```bash

@@ -1,5 +1,5 @@
 locals {
-  app_name     = "devsu-python-app"
+  app_name     = "demo-python-app"
   cluster_name = "${local.app_name}-${var.environment}"
 }
 

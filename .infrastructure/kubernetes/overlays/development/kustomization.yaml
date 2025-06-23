@@ -4,13 +4,13 @@ resources:
 - ../../base
 namespace: development
 images:
-- name: devsu-python-app-ecr
-  newName: devsu-python-app-ecr
+- name: demo-python-app-ecr
+  newName: demo-python-app-ecr
   newTag: latest
 secretGenerator:
 - behavior: replace
   envs:
   - secret.env
-  name: devsu-python-app-secrets
+  name: demo-python-app-secrets
 generatorOptions:
   disableNameSuffixHash: true

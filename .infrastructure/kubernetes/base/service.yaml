@@ -3,14 +3,14 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: devsu-python-app
-  name: devsu-python-app
+    app: demo-python-app
+  name: demo-python-app
 spec:
   ports:
   - port: 80
     protocol: TCP
     targetPort: 8000
   selector:
-    app: devsu-python-app
+    app: demo-python-app
 status:
   loadBalancer: {}
